@@ -1,0 +1,3028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToxyFan - Movie Streaming App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        .dark-theme {
+            background: linear-gradient(135deg, #4a1e4a 0%, #2d0a2d 50%, #4a0000 100%);
+            color: #fbcfe8;
+        }
+
+        .light-theme {
+            background: linear-gradient(135deg, #ebf8ff 0%, #f3e8ff 50%, #fce7f3 100%);
+            color: #1e293b;
+        }
+
+        header {
+            padding: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: background-color 0.5s;
+        }
+
+        .dark-header {
+            background-color: rgba(131, 24, 67, 0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .light-header {
+            background-color: rgba(191, 219, 254, 0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @media (min-width: 640px) {
+            nav {
+                flex-direction: row;
+            }
+        }
+
+        .logo {
+            height: 40px;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .logo {
+                margin-bottom: 0;
+            }
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .nav-buttons {
+                justify-content: flex-end;
+                gap: 1rem;
+            }
+        }
+
+        .button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            font-size: 0.875rem;
+        }
+
+        @media (min-width: 640px) {
+            .button {
+                padding: 0.5rem 1rem;
+                font-size: 1rem;
+            }
+        }
+
+        .dark-button {
+            background-color: #be185d;
+            color: #fbcfe8;
+        }
+
+        .dark-button:hover {
+            background-color: #9d174d;
+        }
+
+        .light-button {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .light-button:hover {
+            background-color: #2563eb;
+        }
+
+        .dropdown-container {
+            position: relative;
+        }
+
+        .dropdown-button {
+            display: flex;
+            align-items: center;
+        }
+
+        .dropdown-arrow {
+            margin-left: 0.25rem;
+            width: 0.75rem;
+            height: 0.75rem;
+            transition: transform 0.2s;
+        }
+
+        @media (min-width: 640px) {
+            .dropdown-arrow {
+                margin-left: 0.5rem;
+                width: 1rem;
+                height: 1rem;
+            }
+        }
+
+        .dropdown-arrow.rotated {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            margin-top: 0.5rem;
+            width: 10rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        @media (min-width: 640px) {
+            .dropdown-menu {
+                width: 12rem;
+            }
+        }
+
+        .dark-dropdown {
+            background-color: rgba(131, 24, 67, 0.95);
+        }
+
+        .light-dropdown {
+            background-color: rgba(191, 219, 254, 0.95);
+        }
+
+        .dropdown-list {
+            padding: 0.25rem 0;
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.875rem;
+            transition: background-color 0.2s;
+        }
+
+        @media (min-width: 640px) {
+            .dropdown-item {
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        .dark-dropdown-item {
+            color: #fbcfe8;
+        }
+
+        .dark-dropdown-item:hover {
+            background-color: #be185d;
+        }
+
+        .light-dropdown-item {
+            color: #1e293b;
+        }
+
+        .light-dropdown-item:hover {
+            background-color: #93c5fd;
+        }
+
+        .theme-toggle {
+            padding: 0.5rem;
+            border-radius: 9999px;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .icon {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            main {
+                padding: 1.5rem;
+            }
+        }
+
+        .hero-section {
+            position: relative;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        @media (min-width: 640px) {
+            .hero-section {
+                padding: 2rem;
+                margin-bottom: 3rem;
+            }
+        }
+
+        .dark-hero {
+            background-color: rgba(131, 24, 67, 0.4);
+        }
+
+        .light-hero {
+            background-color: rgba(191, 219, 254, 0.4);
+        }
+
+        .carousel-control {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+            padding: 0.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .carousel-control {
+                padding: 1rem;
+            }
+        }
+
+        .carousel-button {
+            border-radius: 9999px;
+            padding: 0.25rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s;
+        }
+
+        @media (min-width: 640px) {
+            .carousel-button {
+                padding: 0.5rem;
+            }
+        }
+
+        .dark-carousel-button {
+            background-color: rgba(190, 24, 93, 0.7);
+        }
+
+        .dark-carousel-button:hover {
+            background-color: #9d174d;
+        }
+
+        .light-carousel-button {
+            background-color: rgba(59, 130, 246, 0.7);
+        }
+
+        .light-carousel-button:hover {
+            background-color: #2563eb;
+        }
+
+        .carousel-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: white;
+        }
+
+        @media (min-width: 640px) {
+            .carousel-icon {
+                width: 2rem;
+                height: 2rem;
+            }
+        }
+
+        .carousel-container {
+            display: flex;
+            overflow-x: hidden;
+            scroll-snap-type: x mandatory;
+            border-radius: 0.75rem;
+        }
+
+        .carousel-slide {
+            flex: none;
+            width: 100%;
+            scroll-snap-align: start;
+            position: relative;
+        }
+
+        .carousel-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .carousel-content {
+                flex-direction: row;
+                padding: 2rem;
+            }
+        }
+
+        .carousel-text {
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .carousel-text {
+                width: 50%;
+                text-align: left;
+            }
+        }
+
+        .carousel-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            line-height: 1.25;
+            text-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (min-width: 640px) {
+            .carousel-title {
+                font-size: 2.25rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .dark-title {
+            color: #fbcfe8;
+        }
+
+        .light-title {
+            color: #1e3a8a;
+        }
+
+        .carousel-description {
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            max-width: 32rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (min-width: 640px) {
+            .carousel-description {
+                font-size: 1.25rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .carousel-description {
+                margin-left: 0;
+                margin-right: 0;
+            }
+        }
+
+        .dark-description {
+            color: #f9a8d4;
+        }
+
+        .light-description {
+            color: #374151;
+        }
+
+        .play-button {
+            padding: 0.5rem 1.5rem;
+            background-color: #dc2626;
+            color: white;
+            font-weight: bold;
+            font-size: 0.875rem;
+            border-radius: 9999px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .play-button:hover {
+            background-color: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .play-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.5);
+        }
+
+        @media (min-width: 640px) {
+            .play-button {
+                padding: 0.75rem 2rem;
+                font-size: 1.125rem;
+            }
+        }
+
+        .carousel-image {
+            width: 12rem;
+            height: 18rem;
+            margin-top: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transition: transform 0.5s;
+            cursor: pointer;
+        }
+
+        @media (min-width: 640px) {
+            .carousel-image {
+                width: auto;
+                height: auto;
+                margin-top: 0;
+            }
+        }
+
+        .carousel-image:hover {
+            transform: rotate(0deg);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .section-title {
+                font-size: 1.875rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .dark-section-title {
+            color: #fbcfe8;
+        }
+
+        .light-section-title {
+            color: #1e3a8a;
+        }
+
+        .trending-button {
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        @media (min-width: 640px) {
+            .trending-button {
+                font-size: 1rem;
+            }
+        }
+
+        .dark-trending-button {
+            background-color: #7e22ce;
+            color: #fbcfe8;
+        }
+
+        .dark-trending-button:hover {
+            background-color: #6b21a8;
+        }
+
+        .light-trending-button {
+            background-color: #8b5cf6;
+            color: white;
+        }
+
+        .light-trending-button:hover {
+            background-color: #7c3aed;
+        }
+
+        .loading-text {
+            font-size: 0.875rem;
+        }
+
+        @media (min-width: 640px) {
+            .loading-text {
+                font-size: 1rem;
+            }
+        }
+
+        .dark-loading {
+            color: #f9a8d4;
+        }
+
+        .light-loading {
+            color: #4b5563;
+        }
+
+        .movies-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        @media (min-width: 640px) {
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .movies-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .movies-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .movie-card {
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 0.75rem;
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        @media (min-width: 640px) {
+            .movie-card {
+                padding: 1rem;
+            }
+        }
+
+        .dark-movie-card {
+            background-color: rgba(190, 24, 93, 0.5);
+        }
+
+        .light-movie-card {
+            background-color: rgba(191, 219, 254, 0.5);
+        }
+
+        .movie-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        @media (min-width: 640px) {
+            .movie-title {
+                font-size: 1.25rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        .dark-movie-title {
+            color: #fbcfe8;
+        }
+
+        .light-movie-title {
+            color: #1e293b;
+        }
+
+        .movie-description {
+            font-size: 0.75rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 640px) {
+            .movie-description {
+                font-size: 0.875rem;
+            }
+        }
+
+        .dark-movie-description {
+            color: #f9a8d4;
+        }
+
+        .light-movie-description {
+            color: #4b5563;
+        }
+
+        .movie-views {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .dark-movie-views {
+            color: #f472b6;
+        }
+
+        .light-movie-views {
+            color: #6b7280;
+        }
+
+        .new-uploads-section {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 640px) {
+            .new-uploads-section {
+                margin-bottom: 3rem;
+            }
+        }
+
+        .scroll-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 9999px;
+            padding: 0.25rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s;
+            z-index: 10;
+        }
+
+        @media (min-width: 640px) {
+            .scroll-button {
+                padding: 0.5rem;
+            }
+        }
+
+        .dark-scroll-button {
+            background-color: rgba(190, 24, 93, 0.7);
+        }
+
+        .dark-scroll-button:hover {
+            background-color: #9d174d;
+        }
+
+        .light-scroll-button {
+            background-color: rgba(59, 130, 246, 0.7);
+        }
+
+        .light-scroll-button:hover {
+            background-color: #2563eb;
+        }
+
+        .scroll-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: white;
+        }
+
+        @media (min-width: 640px) {
+            .scroll-icon {
+                width: 2rem;
+                height: 2rem;
+            }
+        }
+
+        .new-uploads-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding: 0.5rem;
+            scrollbar-width: none;
+        }
+
+        @media (min-width: 640px) {
+            .new-uploads-container {
+                gap: 1.5rem;
+                padding: 1rem;
+            }
+        }
+
+        .new-uploads-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .upload-card {
+            flex: none;
+            width: 12rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        @media (min-width: 640px) {
+            .upload-card {
+                width: 16rem;
+            }
+        }
+
+        .upload-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .dark-upload-card {
+            background-color: rgba(190, 24, 93, 0.5);
+        }
+
+        .light-upload-card {
+            background-color: rgba(191, 219, 254, 0.5);
+        }
+
+        .upload-image {
+            width: 100%;
+            height: 16rem;
+            object-fit: cover;
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .upload-image {
+                height: 20rem;
+            }
+        }
+
+        .upload-content {
+            padding: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .upload-content {
+                padding: 1rem;
+            }
+        }
+
+        .recommendations-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .recommendations-form {
+                flex-direction: row;
+                gap: 1rem;
+            }
+        }
+
+        .recommendations-input {
+            flex-grow: 1;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            border: 1px solid;
+            outline: none;
+        }
+
+        @media (min-width: 640px) {
+            .recommendations-input {
+                padding: 0.75rem;
+                font-size: 1rem;
+            }
+        }
+
+        .dark-recommendations-input {
+            background-color: rgba(131, 24, 67, 0.7);
+            color: #fbcfe8;
+            border-color: #be185d;
+            placeholder-color: #f9a8d4;
+        }
+
+        .dark-recommendations-input:focus {
+            box-shadow: 0 0 0 2px #ec4899;
+        }
+
+        .light-recommendations-input {
+            background-color: rgba(191, 219, 254, 0.7);
+            color: #1e293b;
+            border-color: #93c5fd;
+            placeholder-color: #6b7280;
+        }
+
+        .light-recommendations-input:focus {
+            box-shadow: 0 0 0 2px #3b82f6;
+        }
+
+        .recommendations-button {
+            padding: 0.5rem 1rem;
+            background-color: #dc2626;
+            color: white;
+            font-weight: bold;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .recommendations-button:hover {
+            background-color: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .recommendations-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.5);
+        }
+
+        @media (min-width: 640px) {
+            .recommendations-button {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            border: 1px solid;
+            outline: none;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .search-input {
+                padding: 0.75rem;
+                font-size: 1rem;
+            }
+        }
+
+        .dark-search-input {
+            background-color: rgba(131, 24, 67, 0.7);
+            color: #fbcfe8;
+            border-color: #be185d;
+            placeholder-color: #f9a8d4;
+        }
+
+        .dark-search-input:focus {
+            box-shadow: 0 0 0 2px #ec4899;
+        }
+
+        .light-search-input {
+            background-color: rgba(191, 219, 254, 0.7);
+            color: #1e293b;
+            border-color: #93c5fd;
+            placeholder-color: #6b7280;
+        }
+
+        .light-search-input:focus {
+            box-shadow: 0 0 0 2px #3b82f6;
+        }
+
+        .pagination {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1.5rem;
+            gap: 0.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .pagination {
+                flex-direction: row;
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+        }
+
+        .pagination-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        @media (min-width: 640px) {
+            .pagination-button {
+                font-size: 1rem;
+            }
+        }
+
+        .pagination-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .dark-pagination-button {
+            background-color: #be185d;
+            color: #fbcfe8;
+        }
+
+        .dark-pagination-button:hover:not(:disabled) {
+            background-color: #9d174d;
+        }
+
+        .light-pagination-button {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .light-pagination-button:hover:not(:disabled) {
+            background-color: #2563eb;
+        }
+
+        .pagination-text {
+            font-size: 0.875rem;
+        }
+
+        @media (min-width: 640px) {
+            .pagination-text {
+                font-size: 1.125rem;
+            }
+        }
+
+        .dark-pagination-text {
+            color: #fbcfe8;
+        }
+
+        .light-pagination-text {
+            color: #1e293b;
+        }
+
+        .upload-section {
+            margin-top: 3rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .upload-section {
+                margin-top: 4rem;
+                padding: 2rem;
+            }
+        }
+
+        .dark-upload-section {
+            background-color: rgba(131, 24, 67, 0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .light-upload-section {
+            background-color: rgba(191, 219, 254, 0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .upload-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        @media (min-width: 640px) {
+            .upload-title {
+                font-size: 1.875rem;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .dark-upload-title {
+            color: #fbcfe8;
+        }
+
+        .light-upload-title {
+            color: #1e293b;
+        }
+
+        .upload-container {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        @media (min-width: 640px) {
+            .upload-container {
+                margin-bottom: 2rem;
+                padding: 1.5rem;
+            }
+        }
+
+        .dark-upload-container {
+            background-color: rgba(190, 24, 93, 0.5);
+        }
+
+        .light-upload-container {
+            background-color: rgba(191, 219, 254, 0.5);
+        }
+
+        .upload-subtitle {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .upload-subtitle {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .dark-upload-subtitle {
+            color: #fbcfe8;
+        }
+
+        .light-upload-subtitle {
+            color: #1e293b;
+        }
+
+        .file-input {
+            display: block;
+            width: 100%;
+            font-size: 0.875rem;
+        }
+
+        @media (min-width: 640px) {
+            .file-input {
+                font-size: 1rem;
+            }
+        }
+
+        .file-input-button {
+            margin-right: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            border: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+        }
+
+        .dark-file-input-button {
+            background-color: #be185d;
+        }
+
+        .dark-file-input-button:hover {
+            background-color: #9d174d;
+        }
+
+        .light-file-input-button {
+            background-color: #3b82f6;
+        }
+
+        .light-file-input-button:hover {
+            background-color: #2563eb;
+        }
+
+        .preview-container {
+            margin-top: 1rem;
+        }
+
+        .preview-media {
+            width: 100%;
+            max-height: 12rem;
+            object-fit: contain;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        @media (min-width: 640px) {
+            .preview-media {
+                max-height: 16rem;
+            }
+        }
+
+        .file-info {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .file-info {
+                font-size: 0.875rem;
+            }
+        }
+
+        .dark-file-info {
+            color: #f9a8d4;
+        }
+
+        .light-file-info {
+            color: #4b5563;
+        }
+
+        .upload-action-button {
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background-color: #dc2626;
+            color: white;
+            font-weight: bold;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .upload-action-button:hover:not(:disabled) {
+            background-color: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .upload-action-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.5);
+        }
+
+        .upload-action-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (min-width: 640px) {
+            .upload-action-button {
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        .upload-status {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        @media (min-width: 640px) {
+            .upload-status {
+                font-size: 1.125rem;
+                margin-top: 2rem;
+            }
+        }
+
+        .dark-upload-status {
+            color: #f9a8d4;
+        }
+
+        .light-upload-status {
+            color: #4b5563;
+        }
+
+        .upload-note {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.75rem;
+            font-style: italic;
+        }
+
+        @media (min-width: 640px) {
+            .upload-note {
+                font-size: 0.875rem;
+            }
+        }
+
+        .dark-upload-note {
+            color: #f472b6;
+        }
+
+        .light-upload-note {
+            color: #6b7280;
+        }
+
+        .player-view {
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 640px) {
+            .player-view {
+                margin-bottom: 3rem;
+            }
+        }
+
+        .back-button {
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+        }
+
+        @media (min-width: 640px) {
+            .back-button {
+                margin-bottom: 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        .back-icon {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.25rem;
+        }
+
+        @media (min-width: 640px) {
+            .back-icon {
+                width: 1.25rem;
+                height: 1.25rem;
+                margin-right: 0.5rem;
+            }
+        }
+
+        .player-container {
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .player-container {
+                padding: 1.5rem;
+            }
+        }
+
+        .dark-player-container {
+            background-color: rgba(131, 24, 67, 0.7);
+        }
+
+        .light-player-container {
+            background-color: rgba(191, 219, 254, 0.7);
+        }
+
+        .player-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .player-title {
+                font-size: 2.25rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .dark-player-title {
+            color: #fbcfe8;
+        }
+
+        .light-player-title {
+            color: #1e293b;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            margin-bottom: 1rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        @media (min-width: 640px) {
+            .video-container {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .video-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-description {
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .player-description {
+                font-size: 1.125rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .dark-player-description {
+            color: #fbcfe8;
+        }
+
+        .light-player-description {
+            color: #4b5563;
+        }
+
+        .player-views {
+            font-size: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .player-views {
+                font-size: 0.875rem;
+            }
+        }
+
+        .dark-player-views {
+            color: #f472b6;
+        }
+
+        .light-player-views {
+            color: #6b7280;
+        }
+
+        .fun-facts-section {
+            margin-top: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .fun-facts-section {
+                margin-top: 2rem;
+            }
+        }
+
+        .fun-facts-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .fun-facts-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .dark-fun-facts-title {
+            color: #fbcfe8;
+        }
+
+        .light-fun-facts-title {
+            color: #1e293b;
+        }
+
+        .fun-facts-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-bottom: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .fun-facts-button {
+                font-size: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .dark-fun-facts-button {
+            background-color: #7e22ce;
+            color: #fbcfe8;
+        }
+
+        .dark-fun-facts-button:hover {
+            background-color: #6b21a8;
+        }
+
+        .light-fun-facts-button {
+            background-color: #8b5cf6;
+            color: white;
+        }
+
+        .light-fun-facts-button:hover {
+            background-color: #7c3aed;
+        }
+
+        .fun-facts-content {
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .fun-facts-content {
+                padding: 1rem;
+            }
+        }
+
+        .dark-fun-facts-content {
+            background-color: rgba(190, 24, 93, 0.5);
+            color: #fbcfe8;
+        }
+
+        .light-fun-facts-content {
+            background-color: rgba(191, 219, 254, 0.5);
+            color: #1e293b;
+        }
+
+        .fun-facts-text {
+            white-space: pre-wrap;
+            font-size: 0.875rem;
+        }
+
+        @media (min-width: 640px) {
+            .fun-facts-text {
+                font-size: 1rem;
+            }
+        }
+
+        .fun-facts-placeholder {
+            font-size: 0.875rem;
+        }
+
+        @media (min-width: 640px) {
+            .fun-facts-placeholder {
+                font-size: 1rem;
+            }
+        }
+
+        .dark-fun-facts-placeholder {
+            color: #f472b6;
+        }
+
+        .light-fun-facts-placeholder {
+            color: #6b7280;
+        }
+
+        .comments-section {
+            margin-top: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .comments-section {
+                margin-top: 2rem;
+            }
+        }
+
+        .comments-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .comments-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+        }
+
+        .dark-comments-title {
+            color: #fbcfe8;
+        }
+
+        .light-comments-title {
+            color: #1e293b;
+        }
+
+        .comment-form {
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .comment-form {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .comment-textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            border: 1px solid;
+            outline: none;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        @media (min-width: 640px) {
+            .comment-textarea {
+                padding: 0.75rem;
+                font-size: 1rem;
+                min-height: 80px;
+            }
+        }
+
+        .dark-comment-textarea {
+            background-color: rgba(131, 24, 67, 0.7);
+            color: #fbcfe8;
+            border-color: #be185d;
+            placeholder-color: #f9a8d4;
+        }
+
+        .dark-comment-textarea:focus {
+            box-shadow: 0 0 0 2px #ec4899;
+        }
+
+        .light-comment-textarea {
+            background-color: rgba(191, 219, 254, 0.7);
+            color: #1e293b;
+            border-color: #93c5fd;
+            placeholder-color: #6b7280;
+        }
+
+        .light-comment-textarea:focus {
+            box-shadow: 0 0 0 2px #3b82f6;
+        }
+
+        .comment-submit-button {
+            margin-top: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: #dc2626;
+            color: white;
+            font-weight: bold;
+            font-size: 0.875rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .comment-submit-button:hover {
+            background-color: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .comment-submit-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.5);
+        }
+
+        @media (min-width: 640px) {
+            .comment-submit-button {
+                margin-top: 0.75rem;
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .comments-list {
+                gap: 1rem;
+            }
+        }
+
+        .comment-item {
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        @media (min-width: 640px) {
+            .comment-item {
+                padding: 1rem;
+            }
+        }
+
+        .dark-comment-item {
+            background-color: rgba(190, 24, 93, 0.5);
+        }
+
+        .light-comment-item {
+            background-color: rgba(191, 219, 254, 0.5);
+        }
+
+        .comment-text {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        @media (min-width: 640px) {
+            .comment-text {
+                font-size: 1.125rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+
+        .dark-comment-text {
+            color: #fbcfe8;
+        }
+
+        .light-comment-text {
+            color: #1e293b;
+        }
+
+        .comment-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .comment-meta {
+                font-size: 0.875rem;
+            }
+        }
+
+        .dark-comment-meta {
+            color: #f472b6;
+        }
+
+        .light-comment-meta {
+            color: #6b7280;
+        }
+
+        .like-button {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: color 0.2s;
+        }
+
+        .dark-like-button {
+            color: #f9a8d4;
+        }
+
+        .dark-like-button:hover {
+            color: #fbcfe8;
+        }
+
+        .light-like-button {
+            color: #4b5563;
+        }
+
+        .light-like-button:hover {
+            color: #1e293b;
+        }
+
+        .like-icon {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .like-icon {
+                width: 1.25rem;
+                height: 1.25rem;
+            }
+        }
+
+        .no-comments {
+            font-size: 0.875rem;
+        }
+
+        @media (min-width: 640px) {
+            .no-comments {
+                font-size: 1rem;
+            }
+        }
+
+        .dark-no-comments {
+            color: #f472b6;
+        }
+
+        .light-no-comments {
+            color: #6b7280;
+        }
+
+        footer {
+            padding: 1rem;
+            text-align: center;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+            margin-top: 2rem;
+        }
+
+        @media (min-width: 640px) {
+            footer {
+                margin-top: 3rem;
+            }
+        }
+
+        .dark-footer {
+            background-color: rgba(131, 24, 67, 0.7);
+            backdrop-filter: blur(10px);
+            color: #f9a8d4;
+        }
+
+        .light-footer {
+            background-color: rgba(191, 219, 254, 0.7);
+            backdrop-filter: blur(10px);
+            color: #4b5563;
+        }
+
+        .footer-text {
+            font-size: 0.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .footer-text {
+                font-size: 0.875rem;
+            }
+        }
+
+        .heart {
+            color: #f87171;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            z-index: 50;
+        }
+
+        .modal-content {
+            background-color: #831843;
+            background-opacity: 0.9;
+            border-radius: 0.75rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 2rem;
+            max-width: 32rem;
+            text-align: center;
+            border: 2px solid #ef4444;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f87171;
+            margin-bottom: 1rem;
+        }
+
+        .modal-message {
+            color: #fbcfe8;
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-note {
+            color: #f9a8d4;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-button {
+            padding: 0.5rem 1.5rem;
+            background-color: #dc2626;
+            color: white;
+            font-weight: bold;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .modal-button:hover {
+            background-color: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .modal-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.5);
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <!-- Restriction Modal -->
+    <div id="restrictionModal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3 class="modal-title">Access Restricted</h3>
+            <p class="modal-message" id="modalMessage">Both VPN and Ad Blocker detected. Access is restricted.</p>
+            <p class="modal-note">Please disable your ad blocker or VPN and refresh the page to continue.</p>
+            <button id="modalCloseButton" class="modal-button">Close</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="dark-header">
+        <nav>
+            <img src="https://placehold.co/150x40/FFC0CB/C71585?text=ToxyFan" alt="ToxyFan Logo" class="logo">
+            <div class="nav-buttons">
+                <button id="homeButton" class="button dark-button">Home</button>
+                <div class="dropdown-container">
+                    <button id="categoriesButton" class="button dark-button flex items-center">
+                        Categories
+                        <svg id="dropdownArrow" class="dropdown-arrow dark-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="categoriesDropdown" class="dropdown-menu dark-dropdown" style="display: none;">
+                        <ul class="dropdown-list">
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="All">All</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Action">Action</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Comedy">Comedy</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Drama">Drama</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Fantasy">Fantasy</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Horror">Horror</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Mystery">Mystery</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Romance">Romance</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Sci-Fi">Sci-Fi</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Thriller">Thriller</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Documentary">Documentary</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Adventure">Adventure</a></li>
+                            <li><a href="#" class="dropdown-item dark-dropdown-item" data-category="Animation">Animation</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <button class="button dark-button">My List</button>
+                <button id="themeToggle" class="theme-toggle dark-button">
+                    <svg id="themeIcon" class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.325 3.325l-.707.707M6.382 6.382l-.707-.707M16.95 6.95l.707-.707M7.05 16.95l-.707.707M12 7a5 5 0 100 10 5 5 0 000-10z"></path>
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home View -->
+        <div id="homeView">
+            <!-- Hero Section -->
+            <div class="hero-section dark-hero">
+                <div class="carousel-control">
+                    <button id="prevSlideButton" class="carousel-button dark-carousel-button">
+                        <svg class="carousel-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <button id="nextSlideButton" class="carousel-button dark-carousel-button">
+                        <svg class="carousel-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div id="heroCarousel" class="carousel-container">
+                    <!-- Carousel slides will be added dynamically -->
+                </div>
+            </div>
+
+            <!-- Trending Movies Section -->
+            <div class="mb-8">
+                <h3 class="section-title dark-section-title">Trending Now</h3>
+                <button id="getTrendingButton" class="trending-button dark-trending-button">Get Trending Movies</button>
+                <p id="loadingTrending" class="loading-text dark-loading" style="display: none;">Loading trending movies...</p>
+                <div id="trendingMovies" class="movies-grid">
+                    <!-- Trending movies will be added dynamically -->
+                </div>
+            </div>
+
+            <!-- New Uploads Section -->
+            <div class="new-uploads-section">
+                <h3 class="section-title dark-section-title">New Uploads</h3>
+                <button id="scrollLeftButton" class="scroll-button dark-scroll-button" style="left: 0;">
+                    <svg class="scroll-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <div id="newUploadsContainer" class="new-uploads-container">
+                    <!-- New uploads will be added dynamically -->
+                </div>
+                <button id="scrollRightButton" class="scroll-button dark-scroll-button" style="right: 0;">
+                    <svg class="scroll-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Recommendations Section -->
+            <div class="mb-8">
+                <h3 class="section-title dark-section-title">Personalized Recommendations</h3>
+                <div class="recommendations-form">
+                    <input id="recommendationInput" type="text" placeholder="e.g., 'sci-fi with strong female lead' or 'comedy for family'" class="recommendations-input dark-recommendations-input">
+                    <button id="getRecommendationsButton" class="recommendations-button">Get Recommendations</button>
+                </div>
+                <p id="loadingRecommendations" class="loading-text dark-loading" style="display: none;">Generating recommendations...</p>
+                <div id="recommendedMovies" class="movies-grid">
+                    <!-- Recommended movies will be added dynamically -->
+                </div>
+            </div>
+
+            <!-- All Movies Section -->
+            <h3 id="allMoviesTitle" class="section-title dark-section-title">All Movies (All)</h3>
+            <div class="mb-4">
+                <input id="searchInput" type="text" placeholder="Search movies by title..." class="search-input dark-search-input">
+            </div>
+            <div id="allMoviesGrid" class="movies-grid">
+                <!-- All movies will be added dynamically -->
+            </div>
+            <p id="noMoviesMessage" class="loading-text dark-loading" style="display: none;">No movies found matching your criteria.</p>
+
+            <!-- Pagination Controls -->
+            <div id="paginationControls" class="pagination" style="display: none;">
+                <button id="prevPageButton" class="pagination-button dark-pagination-button">Previous Page</button>
+                <span id="pageInfo" class="pagination-text dark-pagination-text">Page 1 of 1</span>
+                <button id="nextPageButton" class="pagination-button dark-pagination-button">Next Page</button>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-section dark-upload-section">
+                <h2 class="upload-title dark-upload-title">Upload Your Content</h2>
+                
+                <!-- Video Upload -->
+                <div class="upload-container dark-upload-container">
+                    <h3 class="upload-subtitle dark-upload-subtitle">Upload Video</h3>
+                    <input id="videoUploadInput" type="file" accept="video/*" class="file-input dark-file-input">
+                    <div id="videoPreviewContainer" class="preview-container" style="display: none;">
+                        <video id="videoPreview" controls class="preview-media"></video>
+                        <p id="videoFileInfo" class="file-info dark-file-info"></p>
+                    </div>
+                    <button id="uploadVideoButton" class="upload-action-button" disabled>Upload Video to Telegram (Simulated)</button>
+                </div>
+                
+                <!-- Image Upload -->
+                <div class="upload-container dark-upload-container">
+                    <h3 class="upload-subtitle dark-upload-subtitle">Upload Image</h3>
+                    <input id="imageUploadInput" type="file" accept="image/*" class="file-input dark-file-input">
+                    <div id="imagePreviewContainer" class="preview-container" style="display: none;">
+                        <img id="imagePreview" class="preview-media">
+                        <p id="imageFileInfo" class="file-info dark-file-info"></p>
+                    </div>
+                    <button id="uploadImageButton" class="upload-action-button" disabled>Upload Image to Telegram (Simulated)</button>
+                </div>
+                
+                <p id="uploadStatus" class="upload-status dark-upload-status" style="display: none;"></p>
+                <p class="upload-note dark-upload-note">Note: Actual Telegram API integration requires a backend server to handle file uploads and securely store bot tokens and channel IDs. This demonstration simulates the frontend interaction.</p>
+            </div>
+        </div>
+
+        <!-- Player View -->
+        <div id="playerView" style="display: none;">
+            <button id="backButton" class="back-button dark-button">
+                <svg class="back-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Home
+            </button>
+
+            <div class="player-container dark-player-container">
+                <h2 id="playerTitle" class="player-title dark-player-title"></h2>
+                <div class="video-container">
+                    <video id="moviePlayer" controls class="video-player"></video>
+                </div>
+                <p id="playerDescription" class="player-description dark-player-description"></p>
+                <p id="playerViews" class="player-views dark-player-views"></p>
+
+                <!-- Fun Facts Section -->
+                <div class="fun-facts-section">
+                    <h3 class="fun-facts-title dark-fun-facts-title">Fun Facts</h3>
+                    <button id="generateFactsButton" class="fun-facts-button dark-fun-facts-button">Generate Fun Facts</button>
+                    <p id="loadingFacts" class="loading-text dark-loading" style="display: none;">Generating...</p>
+                    <div id="funFactsContent" class="fun-facts-content dark-fun-facts-content" style="display: none;">
+                        <p id="funFactsText" class="fun-facts-text"></p>
+                    </div>
+                    <p id="funFactsPlaceholder" class="fun-facts-placeholder dark-fun-facts-placeholder">Click the button to get some fun facts about this movie!</p>
+                </div>
+
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <h3 class="comments-title dark-comments-title">Comments</h3>
+                    <form id="commentForm" class="comment-form">
+                        <textarea id="commentInput" class="comment-textarea dark-comment-textarea" placeholder="Add a comment..."></textarea>
+                        <button type="submit" class="comment-submit-button">Post Comment</button>
+                    </form>
+                    <div id="commentsList" class="comments-list">
+                        <!-- Comments will be added dynamically -->
+                    </div>
+                    <p id="noCommentsMessage" class="no-comments dark-no-comments">No comments yet. Be the first to comment!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="dark-footer">
+        <p class="footer-text">&copy; <span id="currentYear"></span> ToxyFan. All rights reserved.</p>
+        <p class="footer-text">Designed with <span class="heart">&hearts;</span> for movie lovers.</p>
+    </footer>
+
+    <script>
+        // Mock movie data
+        const initialMockMovies = [
+            {
+                id: '1',
+                title: 'The Grand Adventure',
+                description: 'A thrilling journey across mystical lands to uncover ancient secrets.',
+                poster: 'https://placehold.co/400x600/FFB6C1/8B0000?text=Grand+Adventure',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/adventure-promo',
+                views: 1250,
+                category: 'Action',
+            },
+            {
+                id: '2',
+                title: 'Mystery of the Lost City',
+                description: 'An archaeologist races against time to find a legendary lost city.',
+                poster: 'https://placehold.co/400x600/DDA0DD/4B0082?text=Lost+City',
+                videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+                adUrl: 'https://www.example.com/ad/lost-city-promo',
+                views: 890,
+                category: 'Mystery',
+            },
+            {
+                id: '3',
+                title: 'Space Odyssey 2025',
+                description: 'Humanity\'s last hope lies in a daring mission to the furthest reaches of the galaxy.',
+                poster: 'https://placehold.co/400x600/C6A4A4/A52A2A?text=Space+Odyssey',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/space-odyssey-promo',
+                views: 2100,
+                category: 'Sci-Fi',
+            },
+            {
+                id: '4',
+                title: 'The Silent Forest',
+                description: 'A chilling tale of survival in a forest where silence is the only sound.',
+                poster: 'https://placehold.co/400x600/F08080/800000?text=Silent+Forest',
+                videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+                adUrl: 'https://www.example.com/ad/silent-forest-promo',
+                views: 560,
+                category: 'Horror',
+            },
+            {
+                id: '5',
+                title: 'Underwater World',
+                description: 'Explore the vibrant and mysterious depths of the ocean.',
+                poster: 'https://placehold.co/400x600/ADD8E6/000080?text=Underwater',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/underwater-promo',
+                views: 1500,
+                category: 'Documentary',
+            },
+            {
+                id: '6',
+                title: 'Future City',
+                description: 'A dystopian future where technology rules every aspect of life.',
+                poster: 'https://placehold.co/400x600/E6E6FA/4B0082?text=Future+City',
+                videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+                adUrl: 'https://www.example.com/ad/future-city-promo',
+                views: 980,
+                category: 'Sci-Fi',
+            },
+            {
+                id: '7',
+                title: 'Trading Insights: Market Trends Explained',
+                description: 'An in-depth video analysis of current market trends, trading strategies, and financial news.',
+                poster: 'https://placehold.co/400x600/FFDAB9/A0522D?text=Trading+Video',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/trading-promo',
+                views: 3200,
+                category: 'Documentary',
+            },
+            {
+                id: '1000',
+                title: 'The Digital Frontier',
+                description: 'A documentary exploring the evolution of technology and its impact on society.',
+                poster: 'https://placehold.co/400x600/FFC0CB/C71585?text=Digital+Frontier',
+                videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+                adUrl: 'https://www.example.com/ad/digital-frontier-promo',
+                views: 1800,
+                category: 'Documentary',
+            },
+            {
+                id: '8',
+                title: 'The Enigma Code',
+                description: 'A brilliant cryptographer races against time to decipher a code that could change the world.',
+                poster: 'https://placehold.co/400x600/EE82EE/800080?text=New+Movie+8',
+                videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+                adUrl: 'https://www.example.com/ad/enigma-code-promo',
+                views: 750,
+                category: 'Mystery',
+            },
+            {
+                id: '9',
+                title: 'Whispers of the Past',
+                description: 'A captivating historical drama unraveling forgotten secrets and enduring legacies.',
+                poster: 'https://placehold.co/400x600/B0E0E6/4682B4?text=Whispers+Past',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/whispers-promo',
+                views: 300,
+                category: 'Drama',
+            },
+            {
+                id: '10',
+                title: 'The Cosmic Dance',
+                description: 'A stunning visual journey through the wonders of the universe, exploring galaxies and nebulae.',
+                poster: 'https://placehold.co/400x600/8A2BE2/FFFFFF?text=Cosmic+Dance',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/cosmic-dance-promo',
+                views: 900,
+                category: 'Sci-Fi',
+            },
+            {
+                id: '11',
+                title: 'Echoes of Tomorrow',
+                description: 'In a future where memories can be shared, a detective uncovers a conspiracy that threatens reality.',
+                poster: 'https://placehold.co/400x600/4B0082/FFFFFF?text=Echoes+Tomorrow',
+                videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+                adUrl: 'https://www.example.com/ad/echoes-promo',
+                views: 650,
+                category: 'Sci-Fi',
+            },
+            {
+                id: '12',
+                title: 'Crimson Tide',
+                description: 'A gripping naval thriller where a submarine crew faces a moral dilemma during a nuclear standoff.',
+                poster: 'https://placehold.co/400x600/8B0000/FFFFFF?text=Crimson+Tide',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/crimson-tide-promo',
+                views: 1100,
+                category: 'Action',
+            },
+            {
+                id: '13',
+                title: 'The Last Laugh',
+                description: 'A hilarious comedy about a group of friends trying to save their favorite local comedy club from closing.',
+                poster: 'https://placehold.co/400x600/FFD700/8B0000?text=Last+Laugh',
+                videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+                adUrl: 'https://www.example.com/ad/last-laugh-promo',
+                views: 720,
+                category: 'Comedy',
+            },
+            {
+                id: '14',
+                title: 'Ancient Whispers',
+                description: 'An adventurous archaeologist uncovers a lost civilization in the Amazon, facing ancient traps and curses.',
+                poster: 'https://placehold.co/400x600/DAA520/FFFFFF?text=Ancient+Whispers',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/ancient-whispers-promo',
+                views: 1300,
+                category: 'Adventure',
+            },
+            {
+                id: '15',
+                title: 'City of Shadows',
+                description: 'A gritty crime drama set in a corrupt metropolis, where a lone detective fights for justice.',
+                poster: 'https://placehold.co/400x600/696969/FFFFFF?text=City+Shadows',
+                videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+                adUrl: 'https://www.example.com/ad/city-shadows-promo',
+                views: 950,
+                category: 'Drama',
+            },
+            {
+                id: '16',
+                title: 'The Great Escape',
+                description: 'Based on a true story, a group of prisoners plan an elaborate escape from an impenetrable fortress.',
+                poster: 'https://placehold.co/400x600/A9A9A9/FFFFFF?text=Great+Escape',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/great-escape-promo',
+                views: 1800,
+                category: 'Action',
+            },
+            {
+                id: '17',
+                title: 'Love in Bloom',
+                description: 'A heartwarming romantic comedy about two strangers who find love in unexpected places during springtime.',
+                poster: 'https://placehold.co/400x600/FF69B4/FFFFFF?text=Love+Bloom',
+                videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+                adUrl: 'https://www.example.com/ad/love-bloom-promo',
+                views: 2500,
+                category: 'Romance',
+            },
+            {
+                id: '18',
+                title: 'Quantum Leap',
+                description: 'A mind-bending sci-fi thriller where a scientist discovers a way to jump through parallel universes.',
+                poster: 'https://placehold.co/400x600/800080/FFFFFF?text=Quantum+Leap',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/quantum-leap-promo',
+                views: 1600,
+                category: 'Sci-Fi',
+            },
+            {
+                id: '19',
+                title: 'The Haunted Mansion',
+                description: 'A group of paranormal investigators spend a night in a notoriously haunted mansion, uncovering its dark past.',
+                poster: 'https://placehold.co/400x600/4F4F4F/FFFFFF?text=Haunted+Mansion',
+                videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+                adUrl: 'https://www.example.com/ad/haunted-mansion-promo',
+                views: 800,
+                category: 'Horror',
+            },
+            {
+                id: '20',
+                title: 'Beyond the Stars',
+                description: 'An epic space opera following a crew of explorers on a mission to discover new life forms in a distant galaxy.',
+                poster: 'https://placehold.co/400x600/191970/FFFFFF?text=Beyond+Stars',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/beyond-stars-promo',
+                views: 2000,
+                category: 'Sci-Fi',
+            },
+            {
+                id: '21',
+                title: 'The Magical Forest',
+                description: 'A whimsical animated adventure about a young fairy protecting her enchanted forest from a mischievous wizard.',
+                poster: 'https://placehold.co/400x600/FFDAB9/A0522D?text=Magical+Forest',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/magical-forest-promo',
+                views: 1500,
+                category: 'Animation',
+            },
+            {
+                id: '22',
+                title: 'Robo-Buddy Rescue',
+                description: 'A heartwarming animated story of a boy and his robot companion embarking on a daring rescue mission.',
+                poster: 'https://placehold.co/400x600/B0E0E6/4682B4?text=Robo-Buddy',
+                videoUrl: 'https://www.w3schools.com/html/movie.mp4',
+                adUrl: 'https://www.example.com/ad/robo-buddy-promo',
+                views: 1200,
+                category: 'Animation',
+            },
+            {
+                id: '23',
+                title: 'Dragon\'s Flight',
+                description: 'An epic animated tale of a brave knight befriending a dragon to save their kingdom from an ancient evil.',
+                poster: 'https://placehold.co/400x600/98FB98/006400?text=Dragon+Flight',
+                videoUrl: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                adUrl: 'https://www.example.com/ad/dragon-flight-promo',
+                views: 1800,
+                category: 'Animation',
+            }
+        ];
+
+        // App state
+        const state = {
+            movies: [...initialMockMovies],
+            selectedMovie: null,
+            currentView: 'home',
+            funFacts: null,
+            isLoadingFacts: false,
+            recommendationQuery: '',
+            recommendedMovies: [],
+            isLoadingRecommendations: false,
+            trendingMovies: [],
+            isLoadingTrending: false,
+            isVpnDetected: true,
+            isAdBlockerDetected: false,
+            showRestrictionModal: false,
+            showCategoriesDropdown: false,
+            selectedCategory: 'All',
+            searchQuery: '',
+            comments: [],
+            newCommentText: '',
+            uploadedVideo: null,
+            uploadedImage: null,
+            uploadStatus: '',
+            heroCarouselIndex: 0,
+            currentPage: 1,
+            moviesPerPage: 10,
+            theme: 'dark'
+        };
+
+        // DOM elements
+        const elements = {
+            restrictionModal: document.getElementById('restrictionModal'),
+            modalMessage: document.getElementById('modalMessage'),
+            modalCloseButton: document.getElementById('modalCloseButton'),
+            homeButton: document.getElementById('homeButton'),
+            categoriesButton: document.getElementById('categoriesButton'),
+            dropdownArrow: document.getElementById('dropdownArrow'),
+            categoriesDropdown: document.getElementById('categoriesDropdown'),
+            themeToggle: document.getElementById('themeToggle'),
+            themeIcon: document.getElementById('themeIcon'),
+            homeView: document.getElementById('homeView'),
+            playerView: document.getElementById('playerView'),
+            heroCarousel: document.getElementById('heroCarousel'),
+            prevSlideButton: document.getElementById('prevSlideButton'),
+            nextSlideButton: document.getElementById('nextSlideButton'),
+            getTrendingButton: document.getElementById('getTrendingButton'),
+            loadingTrending: document.getElementById('loadingTrending'),
+            trendingMovies: document.getElementById('trendingMovies'),
+            newUploadsContainer: document.getElementById('newUploadsContainer'),
+            scrollLeftButton: document.getElementById('scrollLeftButton'),
+            scrollRightButton: document.getElementById('scrollRightButton'),
+            recommendationInput: document.getElementById('recommendationInput'),
+            getRecommendationsButton: document.getElementById('getRecommendationsButton'),
+            loadingRecommendations: document.getElementById('loadingRecommendations'),
+            recommendedMovies: document.getElementById('recommendedMovies'),
+            allMoviesTitle: document.getElementById('allMoviesTitle'),
+            searchInput: document.getElementById('searchInput'),
+            allMoviesGrid: document.getElementById('allMoviesGrid'),
+            noMoviesMessage: document.getElementById('noMoviesMessage'),
+            paginationControls: document.getElementById('paginationControls'),
+            prevPageButton: document.getElementById('prevPageButton'),
+            pageInfo: document.getElementById('pageInfo'),
+            nextPageButton: document.getElementById('nextPageButton'),
+            videoUploadInput: document.getElementById('videoUploadInput'),
+            videoPreviewContainer: document.getElementById('videoPreviewContainer'),
+            videoPreview: document.getElementById('videoPreview'),
+            videoFileInfo: document.getElementById('videoFileInfo'),
+            uploadVideoButton: document.getElementById('uploadVideoButton'),
+            imageUploadInput: document.getElementById('imageUploadInput'),
+            imagePreviewContainer: document.getElementById('imagePreviewContainer'),
+            imagePreview: document.getElementById('imagePreview'),
+            imageFileInfo: document.getElementById('imageFileInfo'),
+            uploadImageButton: document.getElementById('uploadImageButton'),
+            uploadStatus: document.getElementById('uploadStatus'),
+            backButton: document.getElementById('backButton'),
+            playerTitle: document.getElementById('playerTitle'),
+            moviePlayer: document.getElementById('moviePlayer'),
+            playerDescription: document.getElementById('playerDescription'),
+            playerViews: document.getElementById('playerViews'),
+            generateFactsButton: document.getElementById('generateFactsButton'),
+            loadingFacts: document.getElementById('loadingFacts'),
+            funFactsContent: document.getElementById('funFactsContent'),
+            funFactsText: document.getElementById('funFactsText'),
+            funFactsPlaceholder: document.getElementById('funFactsPlaceholder'),
+            commentForm: document.getElementById('commentForm'),
+            commentInput: document.getElementById('commentInput'),
+            commentsList: document.getElementById('commentsList'),
+            noCommentsMessage: document.getElementById('noCommentsMessage'),
+            currentYear: document.getElementById('currentYear')
+        };
+
+        // Initialize the app
+        function init() {
+            // Set current year in footer
+            elements.currentYear.textContent = new Date().getFullYear();
+
+            // Set up event listeners
+            setupEventListeners();
+
+            // Render initial view
+            renderHomeView();
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Modal close button
+            elements.modalCloseButton.addEventListener('click', () => {
+                state.showRestrictionModal = false;
+                renderRestrictionModal();
+            });
+
+            // Home button
+            elements.homeButton.addEventListener('click', handleBackToHome);
+
+            // Categories dropdown
+            elements.categoriesButton.addEventListener('click', toggleCategoriesDropdown);
+
+            // Theme toggle
+            elements.themeToggle.addEventListener('click', toggleTheme);
+
+            // Hero carousel controls
+            elements.prevSlideButton.addEventListener('click', () => {
+                state.heroCarouselIndex = (state.heroCarouselIndex - 1 + state.movies.length) % state.movies.length;
+                renderHeroCarousel();
+            });
+
+            elements.nextSlideButton.addEventListener('click', () => {
+                state.heroCarouselIndex = (state.heroCarouselIndex + 1) % state.movies.length;
+                renderHeroCarousel();
+            });
+
+            // Get trending movies
+            elements.getTrendingButton.addEventListener('click', getTrendingMovies);
+
+            // New uploads scroll buttons
+            elements.scrollLeftButton.addEventListener('click', () => scrollNewUploads('left'));
+            elements.scrollRightButton.addEventListener('click', () => scrollNewUploads('right'));
+
+            // Get recommendations
+            elements.getRecommendationsButton.addEventListener('click', getMovieRecommendations);
+            elements.recommendationInput.addEventListener('input', (e) => {
+                state.recommendationQuery = e.target.value;
+            });
+
+            // Search input
+            elements.searchInput.addEventListener('input', (e) => {
+                state.searchQuery = e.target.value;
+                state.currentPage = 1;
+                renderAllMovies();
+            });
+
+            // Pagination controls
+            elements.prevPageButton.addEventListener('click', () => {
+                if (state.currentPage > 1) {
+                    state.currentPage--;
+                    renderAllMovies();
+                }
+            });
+
+            elements.nextPageButton.addEventListener('click', () => {
+                const totalPages = Math.ceil(getFilteredMovies().length / state.moviesPerPage);
+                if (state.currentPage < totalPages) {
+                    state.currentPage++;
+                    renderAllMovies();
+                }
+            });
+
+            // Video upload
+            elements.videoUploadInput.addEventListener('change', handleVideoFileChange);
+            elements.uploadVideoButton.addEventListener('click', handleVideoUpload);
+
+            // Image upload
+            elements.imageUploadInput.addEventListener('change', handleImageFileChange);
+            elements.uploadImageButton.addEventListener('click', handleImageUpload);
+
+            // Back button
+            elements.backButton.addEventListener('click', handleBackToHome);
+
+            // Generate fun facts
+            elements.generateFactsButton.addEventListener('click', generateFunFacts);
+
+            // Comment form
+            elements.commentForm.addEventListener('submit', handleAddComment);
+
+            // Detect ad blocker
+            detectAdBlocker();
+        }
+
+        // Render functions
+        function renderRestrictionModal() {
+            if (state.showRestrictionModal) {
+                let message = '';
+                if (state.isVpnDetected && state.isAdBlockerDetected) {
+                    message = "Both VPN and Ad Blocker detected. Access is restricted.";
+                } else if (state.isVpnDetected) {
+                    message = "VPN detected. Access is restricted.";
+                } else {
+                    message = "Ad Blocker detected. Access is restricted.";
+                }
+                elements.modalMessage.textContent = message;
+                elements.restrictionModal.style.display = 'flex';
+            } else {
+                elements.restrictionModal.style.display = 'none';
+            }
+        }
+
+        function renderHomeView() {
+            state.currentView = 'home';
+            elements.homeView.style.display = 'block';
+            elements.playerView.style.display = 'none';
+            
+            renderHeroCarousel();
+            renderNewUploads();
+            renderAllMovies();
+        }
+
+        function renderPlayerView() {
+            state.currentView = 'player';
+            elements.homeView.style.display = 'none';
+            elements.playerView.style.display = 'block';
+            
+            if (state.selectedMovie) {
+                elements.playerTitle.textContent = state.selectedMovie.title;
+                elements.moviePlayer.src = state.selectedMovie.videoUrl;
+                elements.playerDescription.textContent = state.selectedMovie.description;
+                elements.playerViews.textContent = `Total Views: ${state.selectedMovie.views}`;
+                
+                // Clear fun facts
+                state.funFacts = null;
+                elements.funFactsContent.style.display = 'none';
+                elements.funFactsPlaceholder.style.display = 'block';
+                
+                // Render comments
+                renderComments();
+            }
+        }
+
+        function renderHeroCarousel() {
+            elements.heroCarousel.innerHTML = '';
+            
+            state.movies.forEach((movie, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                slide.style.transform = `translateX(-${state.heroCarouselIndex * 100}%)`;
+                
+                slide.innerHTML = `
+                    <div class="carousel-content">
+                        <div class="carousel-text">
+                            <h2 class="carousel-title ${state.theme === 'dark' ? 'dark-title' : 'light-title'}">New Video: ${movie.title}</h2>
+                            <p class="carousel-description ${state.theme === 'dark' ? 'dark-description' : 'light-description'}">${movie.description}</p>
+                            <button data-id="${movie.id}" class="play-button">Watch Now</button>
+                        </div>
+                        <div class="carousel-image-container">
+                            <img src="${movie.poster}" alt="${movie.title}" class="carousel-image" data-id="${movie.id}" onerror="this.src='https://placehold.co/300x450/FF69B4/FFFFFF?text=Poster+Unavailable'">
+                        </div>
+                    </div>
+                `;
+                
+                elements.heroCarousel.appendChild(slide);
+                
+                // Add event listeners to play buttons
+                const playButtons = slide.querySelectorAll('button[data-id], img[data-id]');
+                playButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const movieId = button.getAttribute('data-id');
+                        const movie = state.movies.find(m => m.id === movieId);
+                        if (movie) {
+                            handlePlayMovie(movie);
+                        }
+                    });
+                });
+            });
+        }
+
+        function renderNewUploads() {
+            elements.newUploadsContainer.innerHTML = '';
+            
+            state.movies.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = `upload-card ${state.theme === 'dark' ? 'dark-upload-card' : 'light-upload-card'}`;
+                card.dataset.id = movie.id;
+                
+                card.innerHTML = `
+                    <img src="${movie.poster}" alt="${movie.title}" class="upload-image" onerror="this.src='https://placehold.co/400x600/FFB6C1/8B0000?text=Poster+Unavailable'">
+                    <div class="upload-content">
+                        <h4 class="movie-title ${state.theme === 'dark' ? 'dark-movie-title' : 'light-movie-title'}">${movie.title}</h4>
+                        <p class="movie-description ${state.theme === 'dark' ? 'dark-movie-description' : 'light-movie-description'}">${movie.description}</p>
+                        <p class="movie-views ${state.theme === 'dark' ? 'dark-movie-views' : 'light-movie-views'}">Views: ${movie.views}</p>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    handlePlayMovie(movie);
+                });
+                
+                elements.newUploadsContainer.appendChild(card);
+            });
+        }
+
+        function renderAllMovies() {
+            const filteredMovies = getFilteredMovies();
+            const totalPages = Math.ceil(filteredMovies.length / state.moviesPerPage);
+            const startIndex = (state.currentPage - 1) * state.moviesPerPage;
+            const endIndex = startIndex + state.moviesPerPage;
+            const currentMovies = filteredMovies.slice(startIndex, endIndex);
+            
+            elements.allMoviesGrid.innerHTML = '';
+            
+            if (currentMovies.length === 0) {
+                elements.noMoviesMessage.style.display = 'block';
+                elements.paginationControls.style.display = 'none';
+                return;
+            } else {
+                elements.noMoviesMessage.style.display = 'none';
+            }
+            
+            currentMovies.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = `movie-card ${state.theme === 'dark' ? 'dark-movie-card' : 'light-movie-card'}`;
+                card.dataset.id = movie.id;
+                
+                card.innerHTML = `
+                    <img src="${movie.poster}" alt="${movie.title}" class="upload-image" onerror="this.src='https://placehold.co/400x600/FFB6C1/8B0000?text=Poster+Unavailable'">
+                    <div class="upload-content">
+                        <h4 class="movie-title ${state.theme === 'dark' ? 'dark-movie-title' : 'light-movie-title'}">${movie.title}</h4>
+                        <p class="movie-description ${state.theme === 'dark' ? 'dark-movie-description' : 'light-movie-description'}">${movie.description}</p>
+                        <p class="movie-views ${state.theme === 'dark' ? 'dark-movie-views' : 'light-movie-views'}">Views: ${movie.views}</p>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    handlePlayMovie(movie);
+                });
+                
+                elements.allMoviesGrid.appendChild(card);
+            });
+            
+            // Update pagination controls
+            if (filteredMovies.length > state.moviesPerPage) {
+                elements.paginationControls.style.display = 'flex';
+                elements.pageInfo.textContent = `Page ${state.currentPage} of ${totalPages}`;
+                elements.prevPageButton.disabled = state.currentPage === 1;
+                elements.nextPageButton.disabled = state.currentPage === totalPages;
+            } else {
+                elements.paginationControls.style.display = 'none';
+            }
+            
+            // Update all movies title with category
+            const categoryText = state.selectedCategory === 'All' ? 'All' : state.selectedCategory;
+            elements.allMoviesTitle.textContent = `All Movies (${categoryText})`;
+        }
+
+        function renderTrendingMovies() {
+            elements.trendingMovies.innerHTML = '';
+            
+            if (state.trendingMovies.length === 0) return;
+            
+            state.trendingMovies.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = `movie-card ${state.theme === 'dark' ? 'dark-movie-card' : 'light-movie-card'}`;
+                
+                card.innerHTML = `
+                    <h4 class="movie-title ${state.theme === 'dark' ? 'dark-movie-title' : 'light-movie-title'}">${movie.title}</h4>
+                    <p class="movie-description ${state.theme === 'dark' ? 'dark-movie-description' : 'light-movie-description'}">${movie.description}</p>
+                `;
+                
+                elements.trendingMovies.appendChild(card);
+            });
+        }
+
+        function renderRecommendedMovies() {
+            elements.recommendedMovies.innerHTML = '';
+            
+            if (state.recommendedMovies.length === 0) return;
+            
+            state.recommendedMovies.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = `movie-card ${state.theme === 'dark' ? 'dark-movie-card' : 'light-movie-card'}`;
+                
+                card.innerHTML = `
+                    <h4 class="movie-title ${state.theme === 'dark' ? 'dark-movie-title' : 'light-movie-title'}">${movie.title}</h4>
+                    <p class="movie-description ${state.theme === 'dark' ? 'dark-movie-description' : 'light-movie-description'}">${movie.description}</p>
+                `;
+                
+                elements.recommendedMovies.appendChild(card);
+            });
+        }
+
+        function renderComments() {
+            elements.commentsList.innerHTML = '';
+            
+            const filteredComments = state.selectedMovie 
+                ? state.comments.filter(comment => comment.movieId === state.selectedMovie.id)
+                : [];
+            
+            if (filteredComments.length === 0) {
+                elements.noCommentsMessage.style.display = 'block';
+                return;
+            } else {
+                elements.noCommentsMessage.style.display = 'none';
+            }
+            
+            filteredComments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = `comment-item ${state.theme === 'dark' ? 'dark-comment-item' : 'light-comment-item'}`;
+                
+                commentElement.innerHTML = `
+                    <p class="comment-text ${state.theme === 'dark' ? 'dark-comment-text' : 'light-comment-text'}">${comment.text}</p>
+                    <div class="comment-meta ${state.theme === 'dark' ? 'dark-comment-meta' : 'light-comment-meta'}">
+                        <span>Posted: ${comment.timestamp}</span>
+                        <button class="like-button ${state.theme === 'dark' ? 'dark-like-button' : 'light-like-button'}" data-id="${comment.id}">
+                            <svg class="like-icon" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>${comment.likes} Likes</span>
+                        </button>
+                    </div>
+                `;
+                
+                const likeButton = commentElement.querySelector('.like-button');
+                likeButton.addEventListener('click', () => {
+                    handleLikeComment(comment.id);
+                });
+                
+                elements.commentsList.appendChild(commentElement);
+            });
+        }
+
+        function renderFunFacts() {
+            if (state.funFacts) {
+                elements.funFactsText.textContent = state.funFacts;
+                elements.funFactsContent.style.display = 'block';
+                elements.funFactsPlaceholder.style.display = 'none';
+            } else {
+                elements.funFactsContent.style.display = 'none';
+                elements.funFactsPlaceholder.style.display = 'block';
+            }
+        }
+
+        // Helper functions
+        function getFilteredMovies() {
+            return state.movies.filter(movie => {
+                const matchesCategory = state.selectedCategory === 'All' || movie.category === state.selectedCategory;
+                const matchesSearch = movie.title.toLowerCase().includes(state.searchQuery.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+        }
+
+        // Event handlers
+        function toggleCategoriesDropdown() {
+            state.showCategoriesDropdown = !state.showCategoriesDropdown;
+            elements.categoriesDropdown.style.display = state.showCategoriesDropdown ? 'block' : 'none';
+            elements.dropdownArrow.classList.toggle('rotated', state.showCategoriesDropdown);
+        }
+
+        function toggleTheme() {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            
+            // Update body class
+            document.body.className = `${state.theme}-theme`;
+            
+            // Update header class
+            document.querySelector('header').className = `${state.theme}-header`;
+            
+            // Update theme icon
+            if (state.theme === 'dark') {
+                elements.themeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.325 3.325l-.707.707M6.382 6.382l-.707-.707M16.95 6.95l.707-.707M7.05 16.95l-.707.707M12 7a5 5 0 100 10 5 5 0 000-10z"></path>';
+            } else {
+                elements.themeIcon.innerHTML = '<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>';
+            }
+            
+            // Re-render all views to update theme
+            if (state.currentView === 'home') {
+                renderHomeView();
+            } else {
+                renderPlayerView();
+            }
+        }
+
+        function handlePlayMovie(movie) {
+            if (state.showRestrictionModal) return;
+            
+            // Increment view count
+            state.movies = state.movies.map(m => 
+                m.id === movie.id ? { ...m, views: m.views + 1 } : m
+            );
+            
+            state.selectedMovie = movie;
+            renderPlayerView();
+            
+            // Open ad in new tab
+            window.open(movie.adUrl, '_blank');
+        }
+
+        function handleBackToHome() {
+            state.selectedMovie = null;
+            state.funFacts = null;
+            state.recommendedMovies = [];
+            state.recommendationQuery = '';
+            elements.recommendationInput.value = '';
+            state.trendingMovies = [];
+            state.showCategoriesDropdown = false;
+            elements.categoriesDropdown.style.display = 'none';
+            elements.dropdownArrow.classList.remove('rotated');
+            state.newCommentText = '';
+            elements.commentInput.value = '';
+            state.uploadedVideo = null;
+            state.uploadedImage = null;
+            state.uploadStatus = '';
+            elements.uploadStatus.style.display = 'none';
+            state.selectedCategory = 'All';
+            state.searchQuery = '';
+            elements.searchInput.value = '';
+            state.currentPage = 1;
+            
+            renderHomeView();
+        }
+
+        function scrollNewUploads(direction) {
+            if (direction === 'left') {
+                elements.newUploadsContainer.scrollBy({ left: -300, behavior: 'smooth' });
+            } else {
+                elements.newUploadsContainer.scrollBy({ left: 300, behavior: 'smooth' });
+            }
+        }
+
+        async function generateFunFacts() {
+            if (!state.selectedMovie) return;
+            
+            state.isLoadingFacts = true;
+            state.funFacts = null;
+            elements.loadingFacts.style.display = 'block';
+            elements.funFactsContent.style.display = 'none';
+            elements.funFactsPlaceholder.style.display = 'none';
+            
+            // Simulate API call with timeout
+            setTimeout(() => {
+                // Mock response - in a real app, this would come from an API
+                const mockFacts = `• ${state.selectedMovie.title} was inspired by real events.\n• The lead actor performed all their own stunts.\n• The film's soundtrack won several awards.\n• It took 3 years to complete the special effects.\n• The director cameo appears in scene 42.`;
+                
+                state.funFacts = mockFacts;
+                state.isLoadingFacts = false;
+                elements.loadingFacts.style.display = 'none';
+                renderFunFacts();
+            }, 1500);
+        }
+
+        async function getMovieRecommendations() {
+            const query = state.recommendationQuery.trim();
+            if (!query) {
+                state.recommendedMovies = [{ title: "Please enter a query.", description: "" }];
+                renderRecommendedMovies();
+                return;
+            }
+            
+            state.isLoadingRecommendations = true;
+            state.recommendedMovies = [];
+            elements.loadingRecommendations.style.display = 'block';
+            
+            // Simulate API call with timeout
+            setTimeout(() => {
+                // Mock response - in a real app, this would come from an API
+                const mockRecommendations = [
+                    { title: "Galactic Odyssey", description: "A space adventure that explores the mysteries of the universe." },
+                    { title: "The Last Frontier", description: "A sci-fi thriller about humanity's first contact with aliens." },
+                    { title: "Starlight", description: "A romantic space opera set on a distant colony world." },
+                    { title: "Quantum Paradox", description: "A mind-bending journey through parallel dimensions." }
+                ];
+                
+                state.recommendedMovies = mockRecommendations;
+                state.isLoadingRecommendations = false;
+                elements.loadingRecommendations.style.display = 'none';
+                renderRecommendedMovies();
+            }, 1500);
+        }
+
+        async function getTrendingMovies() {
+            state.isLoadingTrending = true;
+            state.trendingMovies = [];
+            elements.loadingTrending.style.display = 'block';
+            
+            // Simulate API call with timeout
+            setTimeout(() => {
+                // Mock response - in a real app, this would come from an API
+                const mockTrending = [
+                    { title: "Eternal Love", description: "A timeless romance that transcends generations." },
+                    { title: "Shadow Hunter", description: "Action-packed thriller about a rogue agent." },
+                    { title: "Dream Weaver", description: "Fantasy adventure in a world of magic." },
+                    { title: "Midnight Run", description: "Comedy about two unlikely friends on a road trip." }
+                ];
+                
+                state.trendingMovies = mockTrending;
+                state.isLoadingTrending = false;
+                elements.loadingTrending.style.display = 'none';
+                renderTrendingMovies();
+            }, 1500);
+        }
+
+        function handleAddComment(e) {
+            e.preventDefault();
+            
+            const text = elements.commentInput.value.trim();
+            if (text && state.selectedMovie) {
+                const newComment = {
+                    id: Date.now().toString(),
+                    movieId: state.selectedMovie.id,
+                    text: text,
+                    timestamp: new Date().toLocaleString(),
+                    likes: 0
+                };
+                
+                state.comments.push(newComment);
+                elements.commentInput.value = '';
+                renderComments();
+            }
+        }
+
+        function handleLikeComment(commentId) {
+            state.comments = state.comments.map(comment =>
+                comment.id === commentId ? { ...comment, likes: comment.likes + 1 } : comment
+            );
+            
+            renderComments();
+        }
+
+        function handleVideoFileChange(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('video/')) {
+                state.uploadedVideo = file;
+                elements.videoPreview.src = URL.createObjectURL(file);
+                elements.videoFileInfo.textContent = `Selected: ${file.name}`;
+                elements.videoPreviewContainer.style.display = 'block';
+                elements.uploadVideoButton.disabled = false;
+                state.uploadStatus = `Video selected: ${file.name}`;
+                elements.uploadStatus.textContent = state.uploadStatus;
+                elements.uploadStatus.style.display = 'block';
+            } else {
+                state.uploadedVideo = null;
+                elements.videoPreviewContainer.style.display = 'none';
+                elements.uploadVideoButton.disabled = true;
+                state.uploadStatus = 'Please select a valid video file.';
+                elements.uploadStatus.textContent = state.uploadStatus;
+                elements.uploadStatus.style.display = 'block';
+            }
+        }
+
+        function handleImageFileChange(event) {
+            const file = event.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                state.uploadedImage = file;
+                elements.imagePreview.src = URL.createObjectURL(file);
+                elements.imageFileInfo.textContent = `Selected: ${file.name}`;
+                elements.imagePreviewContainer.style.display = 'block';
+                elements.uploadImageButton.disabled = false;
+                state.uploadStatus = `Image selected: ${file.name}`;
+                elements.uploadStatus.textContent = state.uploadStatus;
+                elements.uploadStatus.style.display = 'block';
+            } else {
+                state.uploadedImage = null;
+                elements.imagePreviewContainer.style.display = 'none';
+                elements.uploadImageButton.disabled = true;
+                state.uploadStatus = 'Please select a valid image file.';
+                elements.uploadStatus.textContent = state.uploadStatus;
+                elements.uploadStatus.style.display = 'block';
+            }
+        }
+
+        function handleVideoUpload() {
+            if (state.uploadedVideo) {
+                simulateTelegramUpload('video', state.uploadedVideo);
+            } else {
+                state.uploadStatus = 'No video file selected to upload.';
+                elements.uploadStatus.textContent = state.uploadStatus;
+                elements.uploadStatus.style.display = 'block';
+            }
+        }
+
+        function handleImageUpload() {
+            if (state.uploadedImage) {
+                simulateTelegramUpload('image', state.uploadedImage);
+            } else {
+                state.uploadStatus = 'No image file selected to upload.';
+                elements.uploadStatus.textContent = state.uploadStatus;
+                elements.uploadStatus.style.display = 'block';
+            }
+        }
+
+        function simulateTelegramUpload(fileType, file) {
+            state.uploadStatus = `Uploading ${fileType} "${file.name}"...`;
+            elements.uploadStatus.textContent = state.uploadStatus;
+            elements.uploadStatus.style.display = 'block';
+            
+            setTimeout(() => {
+                state.uploadStatus = `${file.name} (${fileType}) simulated upload successful!`;
+                elements.uploadStatus.textContent = state.uploadStatus;
+            }, 2000);
+        }
+
+        function detectAdBlocker() {
+            // Create a dummy ad element
+            const adTest = document.createElement('div');
+            adTest.innerHTML = '&nbsp;';
+            adTest.className = 'ad-test adsbox';
+            adTest.style.position = 'absolute';
+            adTest.style.top = '-9999px';
+            adTest.style.left = '-9999px';
+            document.body.appendChild(adTest);
+            
+            setTimeout(() => {
+                if (adTest.offsetHeight === 0 || adTest.style.display === 'none' || adTest.style.visibility === 'hidden') {
+                    state.isAdBlockerDetected = true;
+                }
+                document.body.removeChild(adTest);
+                
+                // Set showRestrictionModal based on detection status
+                if (state.isVpnDetected || state.isAdBlockerDetected) {
+                    state.showRestrictionModal = true;
+                } else {
+                    state.showRestrictionModal = false;
+                }
+                
+                renderRestrictionModal();
+            }, 100);
+        }
+
+        // Category dropdown items
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                state.selectedCategory = item.dataset.category;
+                state.currentPage = 1;
+                renderAllMovies();
+                state.showCategoriesDropdown = false;
+                elements.categoriesDropdown.style.display = 'none';
+                elements.dropdownArrow.classList.remove('rotated');
+            });
+        });
+
+        // Auto-scroll for new uploads
+        setInterval(() => {
+            if (state.currentView === 'home' && elements.newUploadsContainer) {
+                const { scrollLeft, scrollWidth, clientWidth } = elements.newUploadsContainer;
+                const scrollAmount = 200;
+                
+                if (scrollLeft + clientWidth >= scrollWidth) {
+                    elements.newUploadsContainer.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    elements.newUploadsContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+            }
+        }, 3000);
+
+        // Auto-rotate hero carousel
+        setInterval(() => {
+            if (state.currentView === 'home') {
+                state.heroCarouselIndex = (state.heroCarouselIndex + 1) % state.movies.length;
+                renderHeroCarousel();
+            }
+        }, 5000);
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
